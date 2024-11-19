@@ -3,6 +3,7 @@ import React, { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import useMessages from '../hooks/useMessage';
 import SessionList from './SessionList';
+import './ChatInterface.css'; // Import CSS file
 
 function ChatInterface() {
   const { 
@@ -21,42 +22,46 @@ function ChatInterface() {
   } = useMessages(selectedSessionId, true); // isLoggedIn is true in ChatInterface
 
   return (
-    <div style={{ display: 'flex' }}>
+    <div className="chat-container">
       <SessionList
         sessions={sessions}
         selectedSessionId={selectedSessionId}
         handleSessionSelect={setSelectedSessionId}
+        className="session-list"
       />
-      <div style={{ width: '80%' }}>
-        <h1>Chat with AI</h1>
-        <button onClick={handleCreateSession}>Create New Session</button>
+      <div className="chat-main">
+        <h1 className="chat-title">Chat with AI</h1>
+        <button className="create-session-btn" onClick={handleCreateSession}>Create New Session</button>
         {selectedSessionId && (
-          <div>
-             <h2>Session ID: {selectedSessionId}</h2> {/* Display selected session ID */}
-            <button onClick={() => handleDeleteSession(selectedSessionId)}>
+          <div className="session-details">
+            <h2 className="session-id">Session ID: {selectedSessionId}</h2>
+            <button className="delete-session-btn" onClick={() => handleDeleteSession(selectedSessionId)}>
               Delete This Session
             </button>
-            {messages.map((msg) => (
-              <div
-                key={msg.id}
-                style={{ textAlign: msg.from_user ? 'right' : 'left' }}
-              >
-                <strong>{msg.from_user ? 'You' : 'Assistant'}:</strong> {msg.text}
-              </div>
-            ))}
+            <div className="message-list">
+              {messages.map((msg) => (
+                <div
+                  key={msg.id}
+                  className={msg.from_user ? 'message-right' : 'message-left'}
+                >
+                  <strong>{msg.from_user ? 'You' : 'Assistant'}:</strong> {msg.text}
+                </div>
+              ))}
+            </div>
             <input
               type="text"
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
+              className="input-field"
               placeholder="Type a message..."
             />
-            <button onClick={handleSendMessage} disabled={!selectedSessionId}>
+            <button className="send-btn" onClick={handleSendMessage} disabled={!selectedSessionId}>
               Send
             </button>
           </div>
         )}
         {!selectedSessionId && (
-          <p>Select a session or create a new one to start chatting.</p>
+          <p className="no-session-text">Select a session or create a new one to start chatting.</p>
         )}
       </div>
     </div>

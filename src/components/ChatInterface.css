@@ -1,0 +1,147 @@
+/* ChatInterface.css */
+
+/* Global Styles */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  body {
+    font-family: Inter, sans-serif;
+    background-color: #f7f7f7;
+  }
+  
+  /* Chat Container */
+  
+  .chat-container {
+    display: flex;
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #161b22;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Session List */
+  
+  .session-list {
+    width: 200px;
+    padding: 20px;
+    border-right: 1px solid #52565c;
+  }
+  
+  /* Chat Main */
+  
+  .chat-main {
+    width: calc(100% - 200px);
+    padding: 20px;
+  }
+  
+  /* Chat Title */
+  
+  .chat-title {
+    font-size: 24px;
+    color: #8b949e;
+    margin-bottom: 10px;
+  }
+  
+  /* Create Session Button */
+  
+  .create-session-btn {
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .create-session-btn:hover {
+    background-color: #3e8e41;
+  }
+  
+  /* Session Details */
+  
+  .session-details {
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+  }
+  
+  /* Session ID */
+  
+  .session-id {
+    font-size: 18px;
+    color: #8b949e;
+    margin-bottom: 10px;
+  }
+  
+  /* Delete Session Button */
+  
+  .delete-session-btn {
+    background-color: #e74c3c;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .delete-session-btn:hover {
+    background-color: #c0392b;
+  }
+  
+  /* Message List */
+  
+  .message-list {
+    padding: 20px;
+  }
+  
+  .message-left {
+    text-align: left;
+    margin-bottom: 10px;
+  }
+  
+  .message-right {
+    text-align: right;
+    margin-bottom: 10px;
+  }
+  
+  /* Input Field */
+  
+  .input-field {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  
+  /* Send Button */
+  
+  .send-btn {
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .send-btn:hover {
+    background-color: #3e8e41;
+  }
+  
+  /* No Session Text */
+  
+  .no-session-text {
+    font-size: 18px;
+    color: #8b949e;
+    padding: 20px;
+  }
