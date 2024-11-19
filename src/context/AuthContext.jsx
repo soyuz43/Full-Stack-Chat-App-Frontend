@@ -8,7 +8,9 @@ export const AuthContext = createContext();
 
 // Create a provider component
 export const AuthProvider = ({ children }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    return Boolean(localStorage.getItem('token'));
+  });
   
   // Destructure all necessary values and functions from useSessions
   const { 
