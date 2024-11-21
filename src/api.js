@@ -112,9 +112,12 @@ export const getSession = async (sessionId) => {
 };
 
 // Send a message (requires authorization)
-export const sendMessage = async (sessionId, text) => {
+export const sendMessage = async (sessionId, text, tipOfTongue = false) => {
   try {
-    const response = await axiosInstance.post(`sessions/${sessionId}/messages/`, { text });
+    const response = await axiosInstance.post(`sessions/${sessionId}/messages/`, {
+      text,
+      tipOfTongue, // Include the flag in the request body
+    });
     return response.data;
   } catch (error) {
     throw error.response.data;
@@ -130,6 +133,7 @@ export const getMessages = async (sessionId) => {
     throw error.response.data;
   }
 };
+
 
 // Delete a session by ID (requires authorization)
 export const deleteSession = async (sessionId) => {

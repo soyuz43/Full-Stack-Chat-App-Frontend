@@ -40,15 +40,21 @@ const useSessions = (isLoggedIn) => {
 
   const handleDeleteSession = useCallback(async (sessionId) => {
     try {
-      await deleteSession(sessionId);
-      setSessions(prevSessions => prevSessions.filter(session => session.session_id !== sessionId));
-      if (selectedSessionId === sessionId) {
-        setSelectedSessionId(null);
-      }
+        console.log(`Deleting session with ID: ${sessionId}`);
+        await deleteSession(sessionId);
+        setSessions((prevSessions) => 
+            prevSessions.filter((session) => session.id !== sessionId) // Use `id` for filtering
+        );
+        if (selectedSessionId === sessionId) {
+            setSelectedSessionId(null); // Reset selected session
+        }
+        console.log(`Session with ID ${sessionId} deleted successfully.`);
     } catch (error) {
-      console.error("Error deleting session:", error);
+        console.error("Error deleting session:", error);
     }
-  }, [selectedSessionId]);
+}, [selectedSessionId]);
+
+  
 
   // Add this function in useSessions hook
 const handleSessionSelect = useCallback((sessionId) => {

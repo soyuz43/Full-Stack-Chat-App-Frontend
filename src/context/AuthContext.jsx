@@ -1,10 +1,11 @@
 // src/context/AuthContext.jsx
-import React, { createContext, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import useSessions from '../hooks/useSession';
+import { AuthContext } from './AuthContextBase'; 
 import { logout } from '../api';
 
 // Create the context
-export const AuthContext = createContext();
+
 
 // Create a provider component
 export const AuthProvider = ({ children }) => {

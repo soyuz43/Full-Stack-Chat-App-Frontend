@@ -1,5 +1,5 @@
 // src/Register.jsx
-import React, { useState } from 'react';
+import React, { useState } from 'react';  // eslint-disable-line
 import { register } from './api';
 import { useNavigate } from 'react-router-dom';
 
