@@ -31,7 +31,7 @@ const useSessions = (isLoggedIn) => {
     try {
         const { session_id } = await createSession();
         console.log("Created session:", session_id);
-        setSessions(prevSessions => [...prevSessions, { id: session_id }]);  // Using id to match fetched sessions
+        setSessions(prevSessions => [...prevSessions, { id: session_id }]);  // Using id to match the backend and fetched sessions
         setSelectedSessionId(session_id);
     } catch (error) {
         console.error("Error creating session:", error);

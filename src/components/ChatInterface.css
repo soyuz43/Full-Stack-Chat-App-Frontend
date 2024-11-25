@@ -1,4 +1,4 @@
-/* ChatInterface.css */
+/* src/components/ChatInterface.css */
 
 /* Global Styles */
 
@@ -148,4 +148,19 @@ body {
   color: #8b949e;
   padding: 20px;
   text-align: center;
+}
+
+/* ! Node Interface */
+.node-interface-link {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 8px 12px;
+  background-color: #007bff;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+.node-interface-link:hover {
+  background-color: #0056b3;
 }
