@@ -1,0 +1,30 @@
+/* src/components/CustomNode.css */
+.custom-node {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background: #fff;
+  min-width: 100px;
+  text-align: center;
+  position: relative;
+}
+
+.custom-node-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.delete-node-btn {
+  background: red;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  padding: 2px 5px;
+  font-size: 12px;
+}
+
+.delete-node-btn:hover {
+  background: darkred;
+}

@@ -1,0 +1,39 @@
+/* src/components/NodeInterface.css */
+.node-interface-container {
+    position: relative;
+    padding: 20px;
+    height: 100vh; /* Utilize full viewport height */
+    width: 100vw;  /* Utilize full viewport width */
+    box-sizing: border-box; /* Include padding in the element's total width and height */
+  }
+  
+  .back-link {
+    display: inline-block;
+    margin-bottom: 10px;
+    padding: 8px 12px;
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+  }
+  
+  .back-link:hover {
+    background-color: #0056b3;
+  }
+  
+  .add-node-btn {
+    display: inline-block;
+    margin-bottom: 10px;
+    padding: 8px 12px;
+    background-color: #28a745;
+    color: #fff;
+    text-decoration: none;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .add-node-btn:hover {
+    background-color: #218838;
+  }
+  

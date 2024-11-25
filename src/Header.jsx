@@ -1,5 +1,5 @@
 // src/Header.jsx
-import React, { useContext } from 'react';  // eslint-disable-line
+import { useContext } from 'react';  // eslint-disable-line
 import { Link } from 'react-router-dom';
 import { AuthContext } from './context/AuthContextBase';
 import './Header.css'; // Import CSS file
