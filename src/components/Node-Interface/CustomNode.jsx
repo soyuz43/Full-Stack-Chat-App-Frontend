@@ -1,12 +1,30 @@
-// src/components/CustomNode.jsx
+// src/components/Node-Interface/CustomNode.jsx
+import { useState } from 'react';
 import { Handle } from 'reactflow';
-import './CustomNode.css'; // Ensure you have appropriate styling
+import './CustomNode.css';
 
 const CustomNode = ({ data, isConnectable, id, removeNode }) => {
+  const [showEditor, setShowEditor] = useState(false);
+  const [instructions, setInstructions] = useState(data.instructions || '');
+
   const handleDelete = () => {
     if (data.removable && removeNode) {
       removeNode(id);
     }
+  };
+
+  const toggleEditor = () => {
+    setShowEditor((prev) => !prev);
+  };
+
+  const handleInstructionsChange = (e) => {
+    setInstructions(e.target.value);
+  };
+
+  const saveInstructions = () => {
+    // Save the instructions to the node's data
+    data.instructions = instructions;
+    setShowEditor(false);
   };
 
   return (
@@ -25,6 +43,20 @@ const CustomNode = ({ data, isConnectable, id, removeNode }) => {
           </button>
         )}
       </div>
+      <button className="edit-node-btn" onClick={toggleEditor}>
+        Edit Instructions
+      </button>
+      {showEditor && (
+        <div className="editor-popup">
+          <textarea
+            value={instructions}
+            onChange={handleInstructionsChange}
+            placeholder="Enter instructions..."
+          />
+          <button onClick={saveInstructions}>Save</button>
+          <button onClick={toggleEditor}>Cancel</button>
+        </div>
+      )}
       <Handle
         type="source"
         position="right"
