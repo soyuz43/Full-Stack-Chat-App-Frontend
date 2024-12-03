@@ -1,6 +1,13 @@
 // src/components/Node-Interface/NodeInterface.jsx
-import React, { useState, useCallback, useMemo, useEffect, useContext } from "react";
-import ReactFlow, { // Imports the ReactFlow component and related utilities for building the node-based interface.
+import {
+  useState,
+  useCallback,
+  useMemo,
+  useEffect,
+  useContext,
+  useRef,
+} from "react";
+import ReactFlow, {
   addEdge,
   Background,
   Controls,
@@ -11,47 +18,60 @@ import { Link } from "react-router-dom";
 import CustomNode from "./CustomNode"; // Import the custom node component
 import "reactflow/dist/style.css";
 import "./NodeInterface.css";
-import { AuthContext } from '../../context/AuthContextBase'; // Import AuthContext
+import { AuthContext } from "../../context/AuthContextBase"; // Import AuthContext
+
+// Define the backend API base URL
+const API_BASE_URL = "http://127.0.0.1:8000/api/";
+
+// Define default nodes and edges outside the component
+const DEFAULT_NODES = [
+  {
+    id: "input",
+    type: "custom",
+    data: { label: "Input", removable: false },
+    position: { x: 0, y: 200 },
+  },
+  {
+    id: "model",
+    type: "custom",
+    data: { label: "Model (OpenAI)", removable: false },
+    position: { x: 250, y: 200 },
+  },
+  {
+    id: "output",
+    type: "custom",
+    data: { label: "Output", removable: false },
+    position: { x: 500, y: 200 },
+  },
+];
+
+const DEFAULT_EDGES = [
+  { id: "e1-2", source: "input", target: "model", animated: true },
+  { id: "e2-3", source: "model", target: "output", animated: true },
+];
 
 const NodeInterface = () => {
   const { userToken, selectedSessionId } = useContext(AuthContext); // Destructure userToken and selectedSessionId from AuthContext
 
-  // Define initial nodes: Input, Model, Output
-  const initialNodes = [
-    {
-      id: "input",
-      type: "custom",
-      data: { label: "Input", removable: false },
-      position: { x: 0, y: 200 },
-    },
-    {
-      id: "model",
-      type: "custom",
-      data: { label: "Model (OpenAI)", removable: false },
-      position: { x: 250, y: 200 },
-    },
-    {
-      id: "output",
-      type: "custom",
-      data: { label: "Output", removable: false },
-      position: { x: 500, y: 200 },
-    },
-  ];
-  const [lastNodeId, setLastNodeId] = useState("model"); // keep track of the last node ID, start with 'model' as the last node
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes); //Utilizes the useEdgesState hook to manage the state of edges, initializing connections between nodes.
-  const [edges, setEdges, onEdgesChange] = useEdgesState([
-    { id: "e1-2", source: "input", target: "model", animated: true },
-    { id: "e2-3", source: "model", target: "output", animated: true },
-  ]);
+  const [lastNodeId, setLastNodeId] = useState("model"); // Keep track of the last node ID
+  const [nodes, setNodes, onNodesChange] = useNodesState(DEFAULT_NODES); // Initialize with default nodes
+  const [edges, setEdges, onEdgesChange] = useEdgesState(DEFAULT_EDGES); // Initialize with default edges
   const [nodeId, setNodeId] = useState(4); // Start from 4 to avoid conflicts
+
+  // Create a ref to hold the latest edges
+  const edgesRef = useRef(edges);
+
+  useEffect(() => {
+    edgesRef.current = edges;
+  }, [edges]);
 
   // Defines a callback function to handle new connections between nodes
   const onConnect = useCallback(
     (params) => setEdges((eds) => addEdge(params, eds)),
     [setEdges]
   );
-  
-  // function to remove a node and its associated edges after user confirmation
+
+  // Function to remove a node and its associated edges after user confirmation
   const removeNode = useCallback(
     (nodeIdToRemove) => {
       if (window.confirm("Are you sure you want to delete this node?")) {
@@ -62,6 +82,22 @@ const NodeInterface = () => {
               edge.source !== nodeIdToRemove && edge.target !== nodeIdToRemove
           )
         );
+
+        // Update lastNodeId if necessary
+        setLastNodeId((currentLastNodeId) => {
+          if (nodeIdToRemove === currentLastNodeId) {
+            // Find the previous node connected to 'currentLastNodeId'
+            const connectedEdge = edgesRef.current.find(
+              (edge) => edge.target === nodeIdToRemove
+            );
+            if (connectedEdge) {
+              return connectedEdge.source;
+            } else {
+              return "model"; // Default to 'model' if no connected edge found
+            }
+          }
+          return currentLastNodeId;
+        });
       }
     },
     [setNodes, setEdges]
@@ -77,6 +113,7 @@ const NodeInterface = () => {
     [removeNode]
   );
 
+  // Define the addNode function
   const addNode = () => {
     const newNodeId = `${nodeId}`; // Get the new node's ID
 
@@ -113,71 +150,113 @@ const NodeInterface = () => {
     setNodeId((id) => id + 1); // Increment nodeId for the next node
   };
 
-  useEffect(() => {
-    // Load workflow when the component mounts
-    if (selectedSessionId) {
-      loadWorkflow();
-    } else {
-      console.error('No session selected.');
-    }
-  }, [selectedSessionId]);
-
-  const loadWorkflow = async () => {
-    if (!userToken || !selectedSessionId) {
-      console.error('User token or session ID is missing.');
-      return;
-    }
-
-    try {
-      const response = await fetch(`/api/get-workflow/${selectedSessionId}/`, {
-        method: 'GET',
-        headers: {
-          Authorization: `Token ${userToken}`,
-        },
-      });
-      if (!response.ok) {
-        throw new Error('Failed to load workflow');
-      }
-      const data = await response.json();
-      setNodes(data.workflow.nodes || []);
-      setEdges(data.workflow.edges || []);
-    } catch (error) {
-      console.error('Error loading workflow:', error);
-    }
-  };
-
+  // Function to save the current workflow
   const saveWorkflow = async () => {
     if (!userToken || !selectedSessionId) {
-      console.error('User token or session ID is missing.');
+      console.error("User token or session ID is missing.");
       return;
     }
 
     const workflow = { nodes, edges };
     try {
-      const response = await fetch(`/api/save-workflow/${selectedSessionId}/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Token ${userToken}`,
-        },
-        body: JSON.stringify(workflow),
-      });
+      const response = await fetch(
+        `${API_BASE_URL}save-workflow/${selectedSessionId}/`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Token ${userToken}`,
+          },
+          body: JSON.stringify(workflow),
+        }
+      );
       if (!response.ok) {
-        throw new Error('Failed to save workflow');
+        const errorData = await response.json(); // Log error response
+        console.error("Error saving workflow:", errorData);
+        throw new Error("Failed to save workflow");
       }
-      console.log('Workflow saved successfully');
+      console.log("Workflow saved successfully");
+      alert("Workflow saved successfully");
     } catch (error) {
-      console.error('Error saving workflow:', error);
+      console.error("Error saving workflow:", error);
+      alert("Error saving workflow");
     }
   };
 
-// console.log('userToken:', userToken);
-// console.log('selectedSessionId:', selectedSessionId);
+  // Function to load the workflow from the backend
+  const loadWorkflow = async () => {
+    if (!userToken || !selectedSessionId) {
+      console.error("User token or session ID is missing.");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}get-workflow/${selectedSessionId}/`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Token ${userToken}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        const errorData = await response.json(); // Log error response
+        console.error("Failed to load workflow:", errorData);
+        throw new Error("Failed to load workflow");
+      }
+      const data = await response.json();
+      console.log("Parsed response data:", data);
+
+      if (data.workflow && data.workflow.nodes.length > 0) {
+        setNodes(data.workflow.nodes);
+        setEdges(data.workflow.edges);
+
+        // Determine the last node ID based on the loaded workflow
+        const removableNodes = data.workflow.nodes.filter(
+          (node) => node.removable
+        );
+        if (removableNodes.length > 0) {
+          const lastNode = removableNodes[removableNodes.length - 1];
+          setLastNodeId(lastNode.id);
+          setNodeId(parseInt(lastNode.id) + 1);
+        } else {
+          setLastNodeId("model");
+          setNodeId(4);
+        }
+
+        console.log("Workflow loaded successfully");
+      } else {
+        // If the workflow is empty, reset to default nodes and edges
+        setNodes(DEFAULT_NODES);
+        setEdges(DEFAULT_EDGES);
+        setLastNodeId("model");
+        setNodeId(4);
+        console.log("Empty workflow. Reset to default nodes.");
+      }
+    } catch (error) {
+      console.error("Error loading workflow:", error);
+    }
+  };
+
+  // Load workflow when the component mounts or when selectedSessionId changes
+  useEffect(() => {
+    if (selectedSessionId) {
+      loadWorkflow();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedSessionId]); // Only re-run when selectedSessionId changes
+
   return (
     <div className="node-interface-container">
       <Link to="/" className="back-link">
         &larr; Back to Chat Interface
       </Link>
+      {selectedSessionId && (
+        <div className="session-info">
+          <h3 className="add-node-btn">Selected Session ID: {selectedSessionId}</h3>
+        </div>
+      )}
       <button onClick={addNode} className="add-node-btn">
         Add Node
       </button>
