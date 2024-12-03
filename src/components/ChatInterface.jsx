@@ -1,10 +1,10 @@
 // src/components/ChatInterface.jsx
-import React, { useState, useContext } from 'react';
-import { Link } from 'react-router-dom'; // Import Link component
-import { AuthContext } from '../context/AuthContextBase';
-import useMessages from '../hooks/useMessage';
-import SessionList from './SessionList';
-import './ChatInterface.css';
+import React, { useState, useContext } from "react";
+import { Link } from "react-router-dom"; // Import Link component
+import { AuthContext } from "../context/AuthContextBase";
+import useMessages from "../hooks/useMessage";
+import SessionList from "./SessionList";
+import "./ChatInterface.css";
 
 function ChatInterface() {
   const {
@@ -16,15 +16,18 @@ function ChatInterface() {
   } = useContext(AuthContext);
 
   const [tipOfTongue, setTipOfTongue] = useState(false);
-  const { messages, inputText, setInputText, sendMessageHandler } = useMessages(selectedSessionId, true);
+  const { messages, inputText, setInputText, sendMessageHandler } = useMessages(
+    selectedSessionId,
+    true
+  );
 
   const handleSendClick = () => {
     sendMessageHandler(tipOfTongue);
-    setInputText('');
+    setInputText("");
   };
 
   const handleKeyPress = (event) => {
-    if (event.key === 'Enter') {
+    if (event.key === "Enter") {
       event.preventDefault();
       sendMessageHandler(tipOfTongue);
     }
@@ -43,9 +46,16 @@ function ChatInterface() {
         <button className="create-session-btn" onClick={handleCreateSession}>
           Create New Session
         </button>
-        <Link to="/node-interface" className="node-interface-link">
-          Go to Node Interface
-        </Link> {/* Navigation link */}
+        {/* ! Pass the selected session ID to AuthContext before navigating */}
+        {selectedSessionId && (
+          <Link
+            to="/node-interface"
+            className="node-interface-link"
+            onClick={() => setSelectedSessionId(selectedSessionId)} // Ensure the selectedSessionId is set
+          >
+            Go to Node Interface
+          </Link>
+        )}
         {selectedSessionId && (
           <div className="session-details">
             <h2 className="session-id">Session ID: {selectedSessionId}</h2>
@@ -56,14 +66,18 @@ function ChatInterface() {
               Delete This Session
             </button>
             <div className="message-list">
-              {messages.slice().reverse().map((msg) => (
-                <div
-                  key={msg.id}
-                  className={msg.from_user ? 'message-right' : 'message-left'}
-                >
-                  <strong>{msg.from_user ? 'You' : 'Assistant'}:</strong> {msg.text}
-                </div>
-              ))}
+              {messages
+                .slice()
+                .reverse()
+                .map((msg) => (
+                  <div
+                    key={msg.id}
+                    className={msg.from_user ? "message-right" : "message-left"}
+                  >
+                    <strong>{msg.from_user ? "You" : "Assistant"}:</strong>{" "}
+                    {msg.text}
+                  </div>
+                ))}
             </div>
             <div className="input-container">
               <input

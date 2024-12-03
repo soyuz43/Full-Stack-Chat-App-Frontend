@@ -1,12 +1,12 @@
 // src/Login.jsx
 import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { login } from './api'; // Adjust based on your API function
+import { login } from './api'; 
 import { AuthContext } from './context/AuthContextBase';
-
+import { setToken } from './utils/tokenManager'; // Import setToken
 
 function Login() {
-  const { handleLoginSuccess } = useContext(AuthContext); // Using handleLoginSuccess from AuthContext
+  const { handleLoginSuccess } = useContext(AuthContext); 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -16,10 +16,10 @@ function Login() {
     event.preventDefault();
     try {
       const data = await login(username, password);
-      localStorage.setItem('token', data.token); // Store the token
+      setToken(data.token); // Use tokenManager to store the token
       handleLoginSuccess(); // Update login state via context
       navigate('/'); // Redirect to the main chat interface
-    } catch (err) {
+    } catch (err) { // eslint-disable-line
       setError('Invalid username or password');
     }
   };
