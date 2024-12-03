@@ -2,16 +2,18 @@
 import { useState, useEffect } from 'react';
 import useSessions from '../hooks/useSession';
 import { AuthContext } from './AuthContextBase'; 
-import { logout } from '../api';
+import { logout as apiLogout } from '../api';
+import { getToken } from '../utils/tokenManager'; // Import getToken
 
 // Create the context
-
 
 // Create a provider component
 export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    return Boolean(localStorage.getItem('token'));
+    return Boolean(getToken()); // Use getToken from tokenManager
   });
+
+  const userToken = getToken(); // Use getToken to retrieve the token
   
   // Destructure all necessary values and functions from useSessions
   const { 
@@ -31,7 +33,7 @@ export const AuthProvider = ({ children }) => {
   // Function to handle logout
   const handleLogout = async () => {
     try {
-      await logout();
+      await apiLogout();
       setIsLoggedIn(false);
       // Sessions will be cleared automatically via useSessions hook
     } catch (error) {
@@ -56,7 +58,8 @@ export const AuthProvider = ({ children }) => {
       handleCreateSession, 
       handleDeleteSession, 
       setSelectedSessionId, 
-      fetchSessions 
+      fetchSessions,
+      userToken, // Provide userToken to the context
     }}>
       {children}
     </AuthContext.Provider>

@@ -1,5 +1,6 @@
 // src/api.js
 import axios from 'axios';
+import { getToken, setToken, removeToken } from './utils/tokenManager'; // Import tokenManager functions
 
 const API_BASE_URL = 'http://127.0.0.1:8000/api/';
 
@@ -11,7 +12,7 @@ const axiosInstance = axios.create({
 // Add a request interceptor to include the token in headers
 axiosInstance.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+    const token = getToken(); // Use tokenManager to get the token
     if (token) {
       config.headers['Authorization'] = `Token ${token}`; // Or `Bearer ${token}` if using JWT
     }
@@ -33,7 +34,7 @@ export const login = async (username, password) => {
   try {
     const response = await axiosInstance.post(`login/`, { username, password });
     const token = response.data.token; // Assuming the response includes a token
-    localStorage.setItem('token', token); // Store the token in localStorage for future requests
+    setToken(token); // Use tokenManager to store the token
     return response.data;
   } catch (error) {
     throw error.response.data;  // Handle errors such as incorrect credentials or server issues
@@ -43,7 +44,7 @@ export const login = async (username, password) => {
 // Logout a user and remove the token
 export const logout = async () => {
   try {
-    const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+    const token = getToken(); // Use tokenManager to get the token
 
     // If no token is found, log an error and return
     if (!token) {
@@ -56,8 +57,8 @@ export const logout = async () => {
       headers: { Authorization: `Token ${token}` } // Use the token in the Authorization header
     });
 
-    // Remove the token from localStorage on successful logout
-    localStorage.removeItem('token');
+    // Remove the token using tokenManager on successful logout
+    removeToken(); // Use tokenManager to remove the token
     return response.data;
   } catch (error) {
     console.error("Logout failed:", error.response?.data || error.message);
@@ -133,7 +134,6 @@ export const getMessages = async (sessionId) => {
     throw error.response.data;
   }
 };
-
 
 // Delete a session by ID (requires authorization)
 export const deleteSession = async (sessionId) => {

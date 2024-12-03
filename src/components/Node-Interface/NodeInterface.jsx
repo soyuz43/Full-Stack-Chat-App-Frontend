@@ -1,5 +1,5 @@
 // src/components/Node-Interface/NodeInterface.jsx
-import { useState, useCallback, useMemo } from "react";
+import React, { useState, useCallback, useMemo, useEffect, useContext } from "react";
 import ReactFlow, { // Imports the ReactFlow component and related utilities for building the node-based interface.
   addEdge,
   Background,
@@ -11,9 +11,11 @@ import { Link } from "react-router-dom";
 import CustomNode from "./CustomNode"; // Import the custom node component
 import "reactflow/dist/style.css";
 import "./NodeInterface.css";
+import { AuthContext } from '../../context/AuthContextBase'; // Import AuthContext
 
 const NodeInterface = () => {
-  //Initializes an array of nodes with specific IDs, types, labels, positions, and a removable flag to control deletion permissions.
+  const { userToken, selectedSessionId } = useContext(AuthContext); // Destructure userToken and selectedSessionId from AuthContext
+
   // Define initial nodes: Input, Model, Output
   const initialNodes = [
     {
@@ -48,6 +50,7 @@ const NodeInterface = () => {
     (params) => setEdges((eds) => addEdge(params, eds)),
     [setEdges]
   );
+  
   // function to remove a node and its associated edges after user confirmation
   const removeNode = useCallback(
     (nodeIdToRemove) => {
@@ -110,6 +113,66 @@ const NodeInterface = () => {
     setNodeId((id) => id + 1); // Increment nodeId for the next node
   };
 
+  useEffect(() => {
+    // Load workflow when the component mounts
+    if (selectedSessionId) {
+      loadWorkflow();
+    } else {
+      console.error('No session selected.');
+    }
+  }, [selectedSessionId]);
+
+  const loadWorkflow = async () => {
+    if (!userToken || !selectedSessionId) {
+      console.error('User token or session ID is missing.');
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/get-workflow/${selectedSessionId}/`, {
+        method: 'GET',
+        headers: {
+          Authorization: `Token ${userToken}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error('Failed to load workflow');
+      }
+      const data = await response.json();
+      setNodes(data.workflow.nodes || []);
+      setEdges(data.workflow.edges || []);
+    } catch (error) {
+      console.error('Error loading workflow:', error);
+    }
+  };
+
+  const saveWorkflow = async () => {
+    if (!userToken || !selectedSessionId) {
+      console.error('User token or session ID is missing.');
+      return;
+    }
+
+    const workflow = { nodes, edges };
+    try {
+      const response = await fetch(`/api/save-workflow/${selectedSessionId}/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Token ${userToken}`,
+        },
+        body: JSON.stringify(workflow),
+      });
+      if (!response.ok) {
+        throw new Error('Failed to save workflow');
+      }
+      console.log('Workflow saved successfully');
+    } catch (error) {
+      console.error('Error saving workflow:', error);
+    }
+  };
+
+// console.log('userToken:', userToken);
+// console.log('selectedSessionId:', selectedSessionId);
   return (
     <div className="node-interface-container">
       <Link to="/" className="back-link">
@@ -117,6 +180,9 @@ const NodeInterface = () => {
       </Link>
       <button onClick={addNode} className="add-node-btn">
         Add Node
+      </button>
+      <button onClick={saveWorkflow} className="save-workflow-btn">
+        Save Workflow
       </button>
       <div style={{ width: "100%", height: "calc(100% - 60px)" }}>
         <ReactFlow
