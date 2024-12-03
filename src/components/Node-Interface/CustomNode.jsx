@@ -22,10 +22,13 @@ const CustomNode = ({ data, isConnectable, id, removeNode }) => {
   };
 
   const saveInstructions = () => {
-    // Save the instructions to the node's data
-    data.instructions = instructions;
+    data.instructions = instructions; // Save locally (for now)
     setShowEditor(false);
   };
+
+  // Determine if this node should allow editing instructions
+  const allowInstructionsEdit =
+    data.label !== 'Input' && data.label !== 'Output'; // Restrict editor for Input and Output nodes
 
   return (
     <div className="custom-node">
@@ -43,19 +46,23 @@ const CustomNode = ({ data, isConnectable, id, removeNode }) => {
           </button>
         )}
       </div>
-      <button className="edit-node-btn" onClick={toggleEditor}>
-        Edit Instructions
-      </button>
-      {showEditor && (
-        <div className="editor-popup">
-          <textarea
-            value={instructions}
-            onChange={handleInstructionsChange}
-            placeholder="Enter instructions..."
-          />
-          <button onClick={saveInstructions}>Save</button>
-          <button onClick={toggleEditor}>Cancel</button>
-        </div>
+      {allowInstructionsEdit && (
+        <>
+          <button className="edit-node-btn" onClick={toggleEditor}>
+            Edit Instructions
+          </button>
+          {showEditor && (
+            <div className="editor-popup">
+              <textarea
+                value={instructions}
+                onChange={handleInstructionsChange}
+                placeholder="Enter instructions..."
+              />
+              <button onClick={saveInstructions}>Save</button>
+              <button onClick={toggleEditor}>Cancel</button>
+            </div>
+          )}
+        </>
       )}
       <Handle
         type="source"
