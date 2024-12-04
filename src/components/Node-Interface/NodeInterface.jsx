@@ -171,15 +171,13 @@ const NodeInterface = () => {
         }
       );
       if (!response.ok) {
-        const errorData = await response.json(); // Log error response
+        const errorData = await response.json();
         console.error("Error saving workflow:", errorData);
         throw new Error("Failed to save workflow");
       }
       console.log("Workflow saved successfully");
-      alert("Workflow saved successfully");
     } catch (error) {
       console.error("Error saving workflow:", error);
-      alert("Error saving workflow");
     }
   };
 
@@ -200,26 +198,46 @@ const NodeInterface = () => {
           },
         }
       );
+
       if (!response.ok) {
         const errorData = await response.json(); // Log error response
         console.error("Failed to load workflow:", errorData);
         throw new Error("Failed to load workflow");
       }
+
       const data = await response.json();
       console.log("Parsed response data:", data);
 
-      if (data.workflow && data.workflow.nodes.length > 0) {
-        setNodes(data.workflow.nodes);
-        setEdges(data.workflow.edges);
+      if (
+        data.workflow &&
+        data.workflow.nodes &&
+        data.workflow.nodes.length > 0
+      ) {
+        // Ensure instructions exist for custom nodes
+        const processedNodes = data.workflow.nodes.map((node) => {
+          if (node.type === "custom") {
+            return {
+              ...node,
+              data: {
+                ...node.data,
+                instructions: node.data.instructions || "", // Ensure instructions key exists
+              },
+            };
+          }
+          return node; // Return non-custom nodes as is
+        });
+
+        setNodes(processedNodes);
+        setEdges(data.workflow.edges || []);
 
         // Determine the last node ID based on the loaded workflow
-        const removableNodes = data.workflow.nodes.filter(
-          (node) => node.removable
+        const removableNodes = processedNodes.filter(
+          (node) => node.data.removable
         );
         if (removableNodes.length > 0) {
           const lastNode = removableNodes[removableNodes.length - 1];
           setLastNodeId(lastNode.id);
-          setNodeId(parseInt(lastNode.id) + 1);
+          setNodeId(parseInt(lastNode.id, 10) + 1);
         } else {
           setLastNodeId("model");
           setNodeId(4);
@@ -227,15 +245,22 @@ const NodeInterface = () => {
 
         console.log("Workflow loaded successfully");
       } else {
-        // If the workflow is empty, reset to default nodes and edges
+        // If the workflow is empty or improperly structured, reset to default nodes and edges
+        console.warn(
+          "Empty or invalid workflow received. Resetting to default nodes."
+        );
         setNodes(DEFAULT_NODES);
         setEdges(DEFAULT_EDGES);
         setLastNodeId("model");
         setNodeId(4);
-        console.log("Empty workflow. Reset to default nodes.");
       }
     } catch (error) {
       console.error("Error loading workflow:", error);
+      // Reset to default nodes and edges in case of any errors
+      setNodes(DEFAULT_NODES);
+      setEdges(DEFAULT_EDGES);
+      setLastNodeId("model");
+      setNodeId(4);
     }
   };
 
@@ -254,7 +279,9 @@ const NodeInterface = () => {
       </Link>
       {selectedSessionId && (
         <div className="session-info">
-          <h3 className="add-node-btn">Selected Session ID: {selectedSessionId}</h3>
+          <h3 className="add-node-btn">
+            Selected Session ID: {selectedSessionId}
+          </h3>
         </div>
       )}
       <button onClick={addNode} className="add-node-btn">
