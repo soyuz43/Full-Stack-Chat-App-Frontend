@@ -19,9 +19,8 @@ function Login() {
       setToken(data.token); // Use tokenManager to store the token
       handleLoginSuccess(); // Update login state via context
       navigate('/'); // Redirect to the main chat interface
-    } catch (err) { // eslint-disable-line
-      setError('Invalid username or password');
-    }
+    } catch (err) { 
+      setError(`Login failed: ${err.message}`);    }
   };
 
   return (

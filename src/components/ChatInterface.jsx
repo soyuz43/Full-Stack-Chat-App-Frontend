@@ -1,5 +1,5 @@
 // src/components/ChatInterface.jsx
-import React, { useState, useContext } from "react";
+import { useState, useContext } from "react";
 import { Link } from "react-router-dom"; // Import Link component
 import { AuthContext } from "../context/AuthContextBase";
 import useMessages from "../hooks/useMessage";
@@ -103,7 +103,7 @@ function ChatInterface() {
                   checked={tipOfTongue}
                   onChange={(e) => setTipOfTongue(e.target.checked)}
                 />
-                It's on the tip of my tongue
+                It&apos;s on the tip of my tongue
               </label>
             </div>
           </div>
