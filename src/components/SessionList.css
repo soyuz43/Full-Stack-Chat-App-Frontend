@@ -1,0 +1,9 @@
+.session-list ul li {
+    cursor: pointer;
+  }
+  
+  .session-list ul li.active {
+    background-color: #f0f0f0;
+    color: #333;
+    font-weight: bold;
+  }

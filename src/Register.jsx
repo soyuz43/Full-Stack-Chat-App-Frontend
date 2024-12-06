@@ -1,7 +1,8 @@
 // src/Register.jsx
-import React, { useState } from 'react';  // eslint-disable-line
+import { useState } from 'react'; 
 import { register } from './api';
 import { useNavigate } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 function Register({ onRegisterSuccess }) {
   const [username, setUsername] = useState('');
@@ -35,7 +36,9 @@ function Register({ onRegisterSuccess }) {
       }
     }
   };
-
+  Register.propTypes = {
+    onRegisterSuccess: PropTypes.func.isRequired,
+  };
   return (
     <form onSubmit={handleRegister}>
       <h2>Register</h2>
