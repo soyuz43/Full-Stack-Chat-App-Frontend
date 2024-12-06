@@ -1,6 +1,6 @@
 // src/hooks/useMessage.js
 import { useState, useEffect } from 'react';
-import { getMessages, sendMessage } from '../api';
+import { getMessages, sendMessage } from '../api/api';
 
 function useMessages(selectedSessionId, isLoggedIn) {
     const [messages, setMessages] = useState([]);

@@ -1,11 +1,10 @@
 // src/context/AuthContext.jsx
 import { useState, useEffect } from 'react';
+import PropTypes from 'prop-types'; // Import PropTypes
 import useSessions from '../hooks/useSession';
 import { AuthContext } from './AuthContextBase'; 
-import { logout as apiLogout } from '../api';
+import { logout as apiLogout } from '../api/api';
 import { getToken } from '../utils/tokenManager'; // Import getToken
-
-// Create the context
 
 // Create a provider component
 export const AuthProvider = ({ children }) => {
@@ -65,3 +64,10 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
+
+// Define prop types for AuthProvider
+AuthProvider.propTypes = {
+  children: PropTypes.node.isRequired,
+};
+
+export default AuthProvider;

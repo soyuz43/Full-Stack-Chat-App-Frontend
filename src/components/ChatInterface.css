@@ -24,18 +24,18 @@ body {
   width: 100vw; /* Take up the full width of the viewport */
   margin: 0; /* Remove any outer margins */
   background-color: #161b22;
-  border-radius: 0; /* Remove border radius for fullscreen look */
-  box-shadow: none; /* Remove box-shadow for cleaner fullscreen style */
+  overflow: hidden; /* Prevent children from overflowing */
 }
 
 /* Session List */
 
 .session-list {
-  width: 250px; /* Slightly wider session list */
+  width: 250px; /* Fixed width */
   padding: 20px;
   border-right: 1px solid #52565c;
   background-color: #1f252b; /* Distinct background for the session list */
   overflow-y: auto; /* Add scroll for long lists */
+  flex-shrink: 0; /* Prevent shrinking */
 }
 
 /* Chat Main */
@@ -47,7 +47,8 @@ body {
   background-color: #161b22;
   color: #ffffff;
   overflow: hidden; /* Prevent content overflow */
-  padding: 0;
+  padding: 0; /* Remove padding */
+  min-width: 0; /* Allow to shrink properly */
 }
 
 /* Chat Title */
@@ -92,19 +93,37 @@ body {
   flex-direction: column-reverse; /* Reverse order to show latest messages at the bottom */
   overflow-y: auto; /* Add scroll for long messages */
   padding: 20px;
+  min-width: 0; /* Prevent overflow */
+}
+
+/* Message Bubbles */
+
+.message-left,
+.message-right {
+  max-width: 60%; /* Restrict the width of message bubbles */
+  padding: 10px 15px;
+  border-radius: 15px;
+  margin-bottom: 10px;
+  overflow-wrap: break-word; /* Handle long words */
+  word-wrap: break-word; /* Compatibility for older browsers */
+  white-space: normal; /* Allow text to wrap naturally */
+  word-break: normal; /* Prevent breaking short words */
+  hyphens: auto; /* Optional: Enable hyphenation */
 }
 
 .message-left {
   text-align: left;
-  margin-bottom: 10px;
+  background-color: #2a2f38; /* Darker background for assistant */
+  align-self: flex-start; /* Align to the left */
 }
 
 .message-right {
   text-align: right;
-  margin-bottom: 10px;
+  background-color: #4caf50; /* Green background for user */
+  align-self: flex-end; /* Align to the right */
 }
 
-/* Input Field Container */
+/* Input Container */
 
 .input-container {
   display: flex;
@@ -112,6 +131,7 @@ body {
   padding: 10px;
   background-color: #1f252b; /* Match the session list background */
   border-top: 1px solid #52565c; /* Add a top border for separation */
+  flex-shrink: 0; /* Prevent from shrinking */
 }
 
 /* Input Field */
@@ -123,6 +143,11 @@ body {
   border: 1px solid #ddd;
   border-radius: 5px;
   margin-right: 10px;
+  max-width: 100%; /* Ensure it doesn't exceed container */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal; /* Allow multi-line input */
+  /* Remove white-space: nowrap; to prevent input field from breaking */
 }
 
 /* Send Button */
@@ -135,6 +160,7 @@ body {
   font-size: 16px;
   cursor: pointer;
   border-radius: 5px;
+  flex-shrink: 0; /* Prevent from shrinking */
 }
 
 .send-btn:hover {
@@ -150,7 +176,8 @@ body {
   text-align: center;
 }
 
-/* ! Node Interface */
+/* Node Interface Link */
+
 .node-interface-link {
   display: inline-block;
   margin-top: 10px;
@@ -159,8 +186,23 @@ body {
   color: #fff;
   text-decoration: none;
   border-radius: 4px;
+  max-width: 100%; /* Prevent overflow */
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  white-space: normal; /* Allow wrapping if needed */
 }
 
 .node-interface-link:hover {
   background-color: #0056b3;
+}
+
+/* Tip of Tongue Container */
+
+.tip-of-tongue-container {
+  padding: 10px 20px;
+}
+
+.tip-of-tongue-container label {
+  font-size: 14px;
+  color: #ffffff;
 }
