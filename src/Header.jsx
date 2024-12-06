@@ -1,8 +1,8 @@
 // src/Header.jsx
-import { useContext } from 'react';  // eslint-disable-line
+import { useContext } from 'react'; 
 import { Link } from 'react-router-dom';
 import { AuthContext } from './context/AuthContextBase';
-import './Header.css'; // Import CSS file
+import './Header.css'; 
 
 function Header() {
   const { isLoggedIn, handleLogout } = useContext(AuthContext);
