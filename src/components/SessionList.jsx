@@ -1,5 +1,6 @@
 // src/components/SessionList.jsx
 import PropTypes from "prop-types";
+import "./SessionList.css"
 function SessionList({ sessions, selectedSessionId, handleSessionSelect }) {
   return (
     <div className="session-list">
