@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import useSessions from '../hooks/useSession';
 import { AuthContext } from './AuthContextBase'; 
-import { logout as apiLogout } from '../api';
+import { logout as apiLogout } from '../api/api';
 import { getToken } from '../utils/tokenManager'; // Import getToken
 
 // Create the context

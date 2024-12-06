@@ -1,6 +1,6 @@
 // src/api.js
 import axios from 'axios';
-import { getToken, setToken, removeToken } from './utils/tokenManager'; // Import tokenManager functions
+import { getToken, setToken, removeToken } from '../utils/tokenManager'; // Import tokenManager functions
 
 const API_BASE_URL = 'http://127.0.0.1:8000/api/';
 

@@ -1,5 +1,5 @@
 // src/components/Node-Interface/NodeInterface.jsx
-import {
+import React, {
   useState,
   useCallback,
   useMemo,
@@ -19,9 +19,7 @@ import CustomNode from "./CustomNode"; // Import the custom node component
 import "reactflow/dist/style.css";
 import "./NodeInterface.css";
 import { AuthContext } from "../../context/AuthContextBase"; // Import AuthContext
-
-// Define the backend API base URL
-const API_BASE_URL = "http://127.0.0.1:8000/api/";
+import { saveWorkflow as apiSaveWorkflow, loadWorkflow as apiLoadWorkflow } from "../../api/workflowApi"; // Import API functions
 
 // Define default nodes and edges outside the component
 const DEFAULT_NODES = [
@@ -159,25 +157,10 @@ const NodeInterface = () => {
 
     const workflow = { nodes, edges };
     try {
-      const response = await fetch(
-        `${API_BASE_URL}save-workflow/${selectedSessionId}/`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Token ${userToken}`,
-          },
-          body: JSON.stringify(workflow),
-        }
-      );
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error("Error saving workflow:", errorData);
-        throw new Error("Failed to save workflow");
-      }
-      console.log("Workflow saved successfully");
+      await apiSaveWorkflow(userToken, selectedSessionId, workflow);
     } catch (error) {
       console.error("Error saving workflow:", error);
+      // Optionally, you can display an error message to the user here
     }
   };
 
@@ -189,24 +172,7 @@ const NodeInterface = () => {
     }
 
     try {
-      const response = await fetch(
-        `${API_BASE_URL}get-workflow/${selectedSessionId}/`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Token ${userToken}`,
-          },
-        }
-      );
-
-      if (!response.ok) {
-        const errorData = await response.json(); // Log error response
-        console.error("Failed to load workflow:", errorData);
-        throw new Error("Failed to load workflow");
-      }
-
-      const data = await response.json();
-      console.log("Parsed response data:", data);
+      const data = await apiLoadWorkflow(userToken, selectedSessionId);
 
       if (
         data.workflow &&

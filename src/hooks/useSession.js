@@ -1,6 +1,6 @@
 // src/hooks/useSessions.js
 import { useState, useEffect, useCallback } from 'react';
-import { getSessions, createSession, deleteSession } from '../api';
+import { getSessions, createSession, deleteSession } from '../api/api';
 
 const useSessions = (isLoggedIn) => {
   const [sessions, setSessions] = useState([]);
