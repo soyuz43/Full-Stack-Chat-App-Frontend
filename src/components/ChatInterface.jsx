@@ -1,6 +1,6 @@
 // src/components/ChatInterface.jsx
 import { useState, useContext } from "react";
-import { Link } from "react-router-dom"; // Import Link component
+import { Link } from "react-router-dom";
 import { AuthContext } from "../context/AuthContextBase";
 import useMessages from "../hooks/useMessage";
 import SessionList from "./SessionList";
@@ -13,7 +13,7 @@ function ChatInterface() {
     handleCreateSession,
     handleDeleteSession,
     setSelectedSessionId,
-  } = useContext(AuthContext);
+  } = useContext(AuthContext); // Retrieve AuthContext values for session management
 
   const [tipOfTongue, setTipOfTongue] = useState(false);
   const { messages, inputText, setInputText, sendMessageHandler } = useMessages(
