@@ -1,6 +1,11 @@
 // src/components/ChatInterface.jsx
 import { useState, useContext } from "react";
 import { Link } from "react-router-dom";
+import ReactMarkdown from "react-markdown"; // Import ReactMarkdown for Markdown rendering
+import remarkGfm from "remark-gfm"; // Import remark-gfm for GitHub Flavored Markdown
+import rehypeSanitize from "rehype-sanitize"; // Import rehype-sanitize for sanitizing HTML
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter"; // Import SyntaxHighlighter
+import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism"; // Import a Prism theme
 import { AuthContext } from "../context/AuthContextBase";
 import useMessages from "../hooks/useMessage";
 import SessionList from "./SessionList";
@@ -28,6 +33,7 @@ function ChatInterface() {
         if (event.key === "Enter") {
             event.preventDefault();
             sendMessageHandler(tipOfTongue);
+            setInputText("");
         }
     };
 
@@ -47,7 +53,7 @@ function ChatInterface() {
                 >
                     Create New Session
                 </button>
-                {/* ! Pass the selected session ID to AuthContext before navigating */}
+                {/* Pass the selected session ID to AuthContext before navigating */}
                 {selectedSessionId && (
                     <Link
                         to="/node-interface"
@@ -89,7 +95,36 @@ function ChatInterface() {
                                                 : "Assistant"}
                                             :
                                         </strong>{" "}
-                                        {msg.text}
+                                        {msg.from_user ? (
+                                            msg.text
+                                        ) : (
+                                            <ReactMarkdown
+                                                remarkPlugins={[remarkGfm]}
+                                                rehypePlugins={[rehypeSanitize]}
+                                                components={{
+                                                    // Customize how code blocks are rendered
+                                                    code({ inline, className, children, ...props }) {
+                                                        const match = /language-(\w+)/.exec(className || '');
+                                                        return !inline && match ? (
+                                                            <SyntaxHighlighter
+                                                                style={oneDark}
+                                                                language={match[1]}
+                                                                PreTag="div"
+                                                                {...props}
+                                                            >
+                                                                {String(children).replace(/\n$/, '')}
+                                                            </SyntaxHighlighter>
+                                                        ) : (
+                                                            <code className={className} {...props}>
+                                                                {children}
+                                                            </code>
+                                                        );
+                                                    }
+                                                }}
+                                            >
+                                                {msg.text}
+                                            </ReactMarkdown>
+                                        )}
                                     </div>
                                 ))}
                         </div>

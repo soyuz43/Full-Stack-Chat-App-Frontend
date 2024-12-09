@@ -62,7 +62,7 @@ body {
 /* Create Session Button */
 
 .create-session-btn {
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: #fff;
   border: none;
   padding: 10px 20px;
@@ -108,7 +108,7 @@ body {
   word-wrap: break-word; /* Compatibility for older browsers */
   white-space: normal; /* Allow text to wrap naturally */
   word-break: normal; /* Prevent breaking short words */
-  hyphens: auto; /* Optional: Enable hyphenation */
+  hyphens: auto; /* Enable hyphenation for better readability */
 }
 
 .message-left {
@@ -121,6 +121,105 @@ body {
   text-align: right;
   background-color: #4caf50; /* Green background for user */
   align-self: flex-end; /* Align to the right */
+}
+
+/* Markdown Styling within Message Bubbles */
+
+/* Headings */
+.message-left h1,
+.message-left h2,
+.message-left h3,
+.message-left h4,
+.message-left h5,
+.message-left h6,
+.message-right h1,
+.message-right h2,
+.message-right h3,
+.message-right h4,
+.message-right h5,
+.message-right h6 {
+    margin: 0.5em 0;
+    font-weight: bold;
+    color: #ffffff; /* Adjust color as needed */
+}
+
+/* Paragraphs */
+.message-left p,
+.message-right p {
+    margin: 0.5em 0;
+}
+
+/* Links */
+.message-left a,
+.message-right a {
+    color: #1e90ff;
+    text-decoration: underline;
+}
+
+.message-left a:hover,
+.message-right a:hover {
+    color: #63a4ff;
+}
+
+/* Lists */
+.message-left ul,
+.message-right ul,
+.message-left ol,
+.message-right ol {
+    margin: 0.5em 0;
+    padding-left: 1.5em;
+}
+
+/* Blockquotes */
+.message-left blockquote,
+.message-right blockquote {
+    border-left: 4px solid #ccc;
+    padding-left: 10px;
+    color: #555;
+    margin: 0.5em 0;
+}
+
+/* Code Blocks */
+.message-left pre,
+.message-right pre {
+    background-color: #2d2d2d;
+    color: #f8f8f2;
+    padding: 10px;
+    border-radius: 5px;
+    overflow-x: auto;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+/* Inline Code */
+.message-left code,
+.message-right code {
+    background-color: #f1f1f1;
+    color: #c7254e;
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+/* Tables */
+.message-left table,
+.message-right table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 0.5em 0;
+}
+
+.message-left th,
+.message-right th,
+.message-left td,
+.message-right td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.message-left th,
+.message-right th {
+    background-color: #f2f2f2;
+    text-align: left;
 }
 
 /* Input Container */
@@ -147,13 +246,12 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: normal; /* Allow multi-line input */
-  /* Remove white-space: nowrap; to prevent input field from breaking */
 }
 
 /* Send Button */
 
 .send-btn {
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: #fff;
   border: none;
   padding: 10px 20px;
