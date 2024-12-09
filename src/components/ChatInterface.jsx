@@ -1,11 +1,11 @@
 // src/components/ChatInterface.jsx
 import { useState, useContext } from "react";
 import { Link } from "react-router-dom";
-import ReactMarkdown from "react-markdown"; // Import ReactMarkdown for Markdown rendering
-import remarkGfm from "remark-gfm"; // Import remark-gfm for GitHub Flavored Markdown
-import rehypeSanitize from "rehype-sanitize"; // Import rehype-sanitize for sanitizing HTML
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter"; // Import SyntaxHighlighter
-import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism"; // Import a Prism theme
+import ReactMarkdown from "react-markdown"; 
+import remarkGfm from "remark-gfm"; 
+import rehypeSanitize from "rehype-sanitize"; 
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { AuthContext } from "../context/AuthContextBase";
 import useMessages from "../hooks/useMessage";
 import SessionList from "./SessionList";
