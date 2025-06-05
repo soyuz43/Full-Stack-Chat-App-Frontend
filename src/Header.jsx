@@ -9,7 +9,7 @@ function Header() {
 
     return (
         <header className="header-container">
-            <h1 className="header-title">My Chat App</h1>
+            <h1 className="header-title">LLama Pipeline</h1>
             {isLoggedIn ? (
                 <button className="logout-btn" onClick={handleLogout}>
                     Logout
